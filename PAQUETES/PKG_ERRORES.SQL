@@ -36,7 +36,7 @@ create or replace package body PKG_ERRORES as
          when 0 then
             return 'OPERACION REALIZADA CON ÉXITO ';
          when -1 then
-            return 'ERROR INESPERADO';
+            return 'ERROR INESPERADO ' || SQLERRM;
          when 1001 then
             return 'ERROR CUENTA/PAGO DUPLICADO';
          when 1002 then
