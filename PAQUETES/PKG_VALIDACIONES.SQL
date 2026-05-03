@@ -19,12 +19,10 @@ create or replace package PKG_VALIDACIONES as
    function FN_PEGUE_EXISTE (
       P_CODIGO_PEGUE number
    ) return boolean; --SOLO VERIFICA SI EL PEGUE EXISTE
-   function FN_ABONADO_EXISTE (
-      P_CODIGO_ABONADO number
-   ) return boolean;
    function FN_PERSONA_EXISTE (
       P_CODIGO_PERSONA number
    ) return boolean;
+
    function FN_CASA_EXISTA (
       P_CODIGO_CASA varchar2
    ) return boolean;
@@ -50,6 +48,10 @@ create or replace package PKG_VALIDACIONES as
    procedure SP_GENERAR_MESES (
       P_CODIGO_MES number
    );
+
+   function FN_ABONADO_EXISTE (
+      P_CODIGO_PERSONA number
+   ) return boolean;
 
 end PKG_VALIDACIONES;
 
@@ -93,22 +95,6 @@ create or replace package body PKG_VALIDACIONES as
 
 
 --SOLO VERIFICA SI EL PEGUE EXISTE
-   function FN_ABONADO_EXISTE (
-      P_CODIGO_ABONADO number
-   ) return boolean as
-      V_CARNADA number;
-   begin
-      select CODIGO_ABONADO
-        into V_CARNADA
-        from TBL_ABONADOS
-       where CODIGO_ABONADO = P_CODIGO_ABONADO;
-      return true;
-   exception
-      when NO_DATA_FOUND then
-         return false;
-   end;
-
-
 
    function FN_PERSONA_EXISTE (
       P_CODIGO_PERSONA number
@@ -257,7 +243,20 @@ create or replace package body PKG_VALIDACIONES as
    end;
 
 
-
+   function FN_ABONADO_EXISTE (
+      P_CODIGO_PERSONA number
+   ) return boolean as
+      V_CARNADA number;
+   begin
+      select CODIGO_ABONADO
+        into V_CARNADA
+        from TBL_ABONADOS
+       where CODIGO_ABONADO = P_CODIGO_PERSONA;
+      return true;
+   exception
+      when NO_DATA_FOUND then
+         return false;
+   end;
 
 
 

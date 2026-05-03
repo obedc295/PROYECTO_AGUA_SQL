@@ -36,10 +36,11 @@ create or replace package PKG_PAGOS as
    );
 
    procedure SP_ACTUALIZAR_CUENTAS (
-      P_CODIGO_PEGUE      number,
-      P_CODIGO_PAGO       number,
-      P_CODIGO_RESULTADO  out number,
-      P_MENSAJE_RESULTADO out varchar2
+      P_CODIGO_PEGUE         number,
+      P_CODIGO_PAGO          number,
+      P_DETALLES_A_REGISTRAR number,
+      P_CODIGO_RESULTADO     out number,
+      P_MENSAJE_RESULTADO    out varchar2
    );
 
 
@@ -202,6 +203,7 @@ create or replace package body PKG_PAGOS as
          PKG_PAGOS.SP_ACTUALIZAR_CUENTAS(
             V_CODIGO_PEGUE,
             V_CODIGO_PAGO,
+            V_DETALLES_A_REGISTRAR,
             P_CODIGO_RESULTADO,
             P_MENSAJE_RESULTADO
          );
@@ -222,10 +224,11 @@ create or replace package body PKG_PAGOS as
 
 
    procedure SP_ACTUALIZAR_CUENTAS (
-      P_CODIGO_PEGUE      number,
-      P_CODIGO_PAGO       number,
-      P_CODIGO_RESULTADO  out number,
-      P_MENSAJE_RESULTADO out varchar2
+      P_CODIGO_PEGUE         number,
+      P_CODIGO_PAGO          number,
+      P_DETALLES_A_REGISTRAR number,
+      P_CODIGO_RESULTADO     out number,
+      P_MENSAJE_RESULTADO    out varchar2
    ) as
 
       cursor CUR_CUENTAS_A_ACTUALIZAR is
@@ -236,12 +239,12 @@ create or replace package body PKG_PAGOS as
        order by 1 asc;
 
 
-      V_CODIGO_CUENTA CUR_CUENTAS_A_ACTUALIZAR%ROWTYPE;
+      V_CODIGO_CUENTA          CUR_CUENTAS_A_ACTUALIZAR%ROWTYPE;
+      V_CONTADOR_ACTUALIZACION number default 0;
    begin
       open CUR_CUENTAS_A_ACTUALIZAR;
-      loop
+      while V_CONTADOR_ACTUALIZACION < P_DETALLES_A_REGISTRAR loop
          fetch CUR_CUENTAS_A_ACTUALIZAR into V_CODIGO_CUENTA;
-         exit when CUR_CUENTAS_A_ACTUALIZAR%NOTFOUND;
          update TBL_CUENTAS
             set
             CODIGO_ESTADO = 2
@@ -257,6 +260,7 @@ create or replace package body PKG_PAGOS as
                     P_CODIGO_PAGO,
                     'PAGO REGISTRADO. ' );
 
+         V_CONTADOR_ACTUALIZACION := V_CONTADOR_ACTUALIZACION + 1;
       end loop;
 
       close CUR_CUENTAS_A_ACTUALIZAR;

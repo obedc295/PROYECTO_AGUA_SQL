@@ -25,8 +25,6 @@ create or replace package PKG_PERSONAS as
       P_CODIGO_RESULTADO  out number
    );
 end PKG_PERSONAS;
-
-
 create or replace package body PKG_PERSONAS as
 
 
