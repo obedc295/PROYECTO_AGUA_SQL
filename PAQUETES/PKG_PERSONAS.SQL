@@ -11,8 +11,8 @@ create or replace package PKG_PERSONAS as
       P_IDENTIDAD         TBL_PERSONAS.NUMERO_IDENTIDAD%type default null,
       P_TELEFONO          TBL_PERSONAS.TELEFONO%type default null,
       P_CORREO            TBL_PERSONAS.CORREO%type default null,
-      P_MENSAJE_RESULTADO out varchar2,
-      P_CODIGO_RESULTADO  out number
+      P_CODIGO_RESULTADO  out number,
+      P_MENSAJE_RESULTADO out varchar2
    );
    procedure SP_ACTUALIZAR_PERSONA (
       P_CODIGO            number,
@@ -21,8 +21,8 @@ create or replace package PKG_PERSONAS as
       P_IDENTIDAD         TBL_PERSONAS.NUMERO_IDENTIDAD%type default null,
       P_TELEFONO          TBL_PERSONAS.TELEFONO%type default null,
       P_CORREO            TBL_PERSONAS.CORREO%type default null,
-      P_MENSAJE_RESULTADO out varchar2,
-      P_CODIGO_RESULTADO  out number
+      P_CODIGO_RESULTADO  out number,
+      P_MENSAJE_RESULTADO out varchar2
    );
 end PKG_PERSONAS;
 create or replace package body PKG_PERSONAS as
@@ -34,8 +34,8 @@ create or replace package body PKG_PERSONAS as
       P_IDENTIDAD         TBL_PERSONAS.NUMERO_IDENTIDAD%type default null,
       P_TELEFONO          TBL_PERSONAS.TELEFONO%type default null,
       P_CORREO            TBL_PERSONAS.CORREO%type default null,
-      P_MENSAJE_RESULTADO out varchar2,
-      P_CODIGO_RESULTADO  out number
+      P_CODIGO_RESULTADO  out number,
+      P_MENSAJE_RESULTADO out varchar2
    ) as
    begin
       insert into TBL_PERSONAS (
@@ -78,8 +78,8 @@ create or replace package body PKG_PERSONAS as
       P_IDENTIDAD         TBL_PERSONAS.NUMERO_IDENTIDAD%type default null,
       P_TELEFONO          TBL_PERSONAS.TELEFONO%type default null,
       P_CORREO            TBL_PERSONAS.CORREO%type default null,
-      P_MENSAJE_RESULTADO out varchar2,
-      P_CODIGO_RESULTADO  out number
+      P_CODIGO_RESULTADO  out number,
+      P_MENSAJE_RESULTADO out varchar2
    ) as
    begin
       if not PKG_VALIDACIONES.FN_PEGUE_EXISTE(P_CODIGO) then
