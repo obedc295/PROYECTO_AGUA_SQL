@@ -65,10 +65,7 @@ se llegó la fecha de pago , inicio de mes por ejemplo, es hora de generar esa n
    begin
 
 -- obtener el mes actual.
-      V_MES_ACTUAL := to_number ( TO_CHAR(
-         SYSDATE,
-         'YYYYMM'
-      ) );
+      V_MES_ACTUAL := PKG_VALIDACIONES.FN_FECHA_A_CODIGO(SYSDATE);
       if not PKG_VALIDACIONES.FN_MES_EXISTE(V_MES_ACTUAL) then
          PKG_VALIDACIONES.SP_GENERAR_MESES(V_MES_ACTUAL);
       end if;
@@ -90,18 +87,13 @@ se llegó la fecha de pago , inicio de mes por ejemplo, es hora de generar esa n
           where CODIGO_PEGUE = V_OBTENER_PEGUE.CODIGO_PEGUE;
 
          if V_ULTIMA_CUENTA is null then
-            V_ULTIMA_CUENTA := to_number ( TO_CHAR(
-               V_OBTENER_PEGUE.FECHA_INSTALACION,
-               'YYYYMM'
-            ) );
+            V_ULTIMA_CUENTA := PKG_VALIDACIONES.FN_FECHA_A_CODIGO(V_OBTENER_PEGUE.FECHA_INSTALACION);
          end if;
 
 
 
-         V_FECHA_MES_ACTUAL := to_date ( TO_CHAR(V_MES_ACTUAL),
-         'YYYYMM' );
-         V_FECHA_ULTIMA_CUENTA := to_date ( TO_CHAR(V_ULTIMA_CUENTA),
-         'YYYYMM' );
+         V_FECHA_MES_ACTUAL := PKG_VALIDACIONES.FN_CODIGO_A_FECHA(V_MES_ACTUAL);
+         V_FECHA_ULTIMA_CUENTA := PKG_VALIDACIONES.FN_CODIGO_A_FECHA(V_ULTIMA_CUENTA);
          V_CUENTAS_A_CREAR := TRUNC(MONTHS_BETWEEN(
             V_FECHA_MES_ACTUAL,
             V_FECHA_ULTIMA_CUENTA
@@ -112,15 +104,12 @@ se llegó la fecha de pago , inicio de mes por ejemplo, es hora de generar esa n
          for I in 1..V_CUENTAS_A_CREAR loop 
 
     --- voy a usar el codigo de la ultima cuenta registrada , la que esta en fecha
-    -- a esa le añáddo el mes correpodiente con el iterador I y lo guardado en la que esta en tipo numero. 
-
-            V_CODIGO_MES := to_number ( TO_CHAR(
-               ADD_MONTHS(
-                  V_FECHA_ULTIMA_CUENTA,
-                  I
-               ),
-               'YYYYMM'
-            ) );
+    -- a esa le añáddo el mes correpodiente con el iterador I y lo guardado en la que esta en tipo numero.
+            V_CODIGO_MES := PKG_VALIDACIONES.FN_FECHA_A_CODIGO(ADD_MONTHS( --por si el mes aun no esta registrado si es muy antiguo.
+               V_FECHA_ULTIMA_CUENTA,
+               I
+            ));
+            PKG_VALIDACIONES.SP_GENERAR_MESES(V_CODIGO_MES);
             insert into TBL_CUENTAS (
                CODIGO_CUENTA,
                CODIGO_PEGUE,

@@ -3,7 +3,6 @@ create or replace package PKG_PEGUES as
       P_CODIGO_ABONADO    number,
       P_CODIGO_TARIFA     number,
       P_UBICACION         varchar2,
-      P_CODIGO_CASA       varchar2,
       P_COSTO_PEGUE       number,
       P_FECHA             date,
       P_CODIGO_RESULTADO  out number,
@@ -29,19 +28,30 @@ create or replace package PKG_PEGUES as
 end PKG_PEGUES;
 
 
-
 create or replace package body PKG_PEGUES as
    procedure SP_REGISTRAR_PEGUE (
       P_CODIGO_ABONADO    number,
       P_CODIGO_TARIFA     number,
       P_UBICACION         varchar2,
-      P_CODIGO_CASA       varchar2,
       P_COSTO_PEGUE       number,
       P_FECHA             date,
       P_CODIGO_RESULTADO  out number,
       P_MENSAJE_RESULTADO out varchar2
    ) as
    begin
+      if PKG_VALIDACIONES.FN_PERSONA_EXISTE(P_CODIGO_ABONADO) then
+         if not PKG_VALIDACIONES.FN_ABONADO_EXISTE(P_CODIGO_ABONADO) then
+            insert into TBL_ABONADOS ( CODIGO_ABONADO ) values ( P_CODIGO_ABONADO );
+         end if;
+      else
+         P_CODIGO_RESULTADO := 1002;
+         P_MENSAJE_RESULTADO := PKG_ERRORES.FN_MENSAJES_ERROR(P_CODIGO_RESULTADO);
+         return;
+      end if;
+
+
+
+
       insert into TBL_PEGUES (
          CODIGO_PEGUE,
          CODIGO_ESTADO,
@@ -56,7 +66,7 @@ create or replace package body PKG_PEGUES as
                  P_CODIGO_ABONADO,
                  P_CODIGO_TARIFA,
                  P_UBICACION,
-                 P_CODIGO_CASA,
+                 'C' || P_CODIGO_ABONADO,
                  P_COSTO_PEGUE,
                  P_FECHA );
 
