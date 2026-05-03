@@ -5,6 +5,7 @@ create or replace package PKG_PEGUES as
       P_UBICACION         varchar2,
       P_CODIGO_CASA       varchar2,
       P_COSTO_PEGUE       number,
+      P_FECHA             date,
       P_CODIGO_RESULTADO  out number,
       P_MENSAJE_RESULTADO out varchar2
    );
@@ -36,6 +37,7 @@ create or replace package body PKG_PEGUES as
       P_UBICACION         varchar2,
       P_CODIGO_CASA       varchar2,
       P_COSTO_PEGUE       number,
+      P_FECHA             date,
       P_CODIGO_RESULTADO  out number,
       P_MENSAJE_RESULTADO out varchar2
    ) as
@@ -47,14 +49,16 @@ create or replace package body PKG_PEGUES as
          CODIGO_TARIFA,
          UBICACION,
          CODIGO_CASA,
-         COSTO_PEGUE
+         COSTO_PEGUE,
+         FECHA_INSTALACION
       ) values ( SEQ_CODIGO_PEGUE.nextval,
                  1,
                  P_CODIGO_ABONADO,
                  P_CODIGO_TARIFA,
                  P_UBICACION,
                  P_CODIGO_CASA,
-                 P_COSTO_PEGUE );
+                 P_COSTO_PEGUE,
+                 P_FECHA );
 
 
 
